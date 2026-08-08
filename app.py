@@ -1,4 +1,3 @@
-```python
 import streamlit as st
 import pandas as pd
 from datetime import datetime
@@ -46,7 +45,7 @@ for h in range(7, 22):
 
 
 # ---------------------------------------------------------
-# GUARDAR RESPUESTAS TEMPORALMENTE
+# RESPUESTAS TEMPORALES
 # ---------------------------------------------------------
 
 if "responses" not in st.session_state:
@@ -110,7 +109,7 @@ with tab1:
     )
 
     # -----------------------------------------------------
-    # TABLA DE HORARIOS
+    # TABLA
     # -----------------------------------------------------
 
     selected = {}
@@ -137,7 +136,7 @@ with tab1:
 
 
     # -----------------------------------------------------
-    # BOTÓN ENVIAR
+    # BOTÓN
     # -----------------------------------------------------
 
     if st.button(
@@ -145,8 +144,6 @@ with tab1:
         type="primary",
         use_container_width=True
     ):
-
-        # Verificar nombre
 
         if not name.strip():
 
@@ -156,7 +153,8 @@ with tab1:
 
         else:
 
-            # Eliminar respuesta anterior de la misma persona
+            # Eliminar respuesta anterior
+            # de la misma persona
 
             st.session_state.responses = [
                 r
@@ -165,7 +163,8 @@ with tab1:
                 != name.strip().lower()
             ]
 
-            # Registrar solamente las horas ocupadas
+            # Guardar únicamente
+            # las horas ocupadas
 
             occupied_count = 0
 
@@ -193,7 +192,8 @@ with tab1:
             )
 
             st.info(
-                "Puedes volver a enviar tus horarios si necesitas modificarlos."
+                "Puedes volver a enviar tus horarios "
+                "si necesitas modificarlos."
             )
 
 
@@ -217,15 +217,11 @@ with tab2:
             st.session_state.responses
         )
 
-        # Contar personas ocupadas
-
         counts = (
             df.groupby(["Hora", "Día"])
             .size()
             .unstack(fill_value=0)
         )
-
-        # Asegurar orden correcto
 
         counts = counts.reindex(
             index=TIMES,
@@ -234,8 +230,8 @@ with tab2:
         )
 
         st.caption(
-            "Cada número representa cuántas personas están "
-            "ocupadas en ese horario."
+            "Cada número representa cuántas personas "
+            "están ocupadas en ese horario."
         )
 
         st.dataframe(
@@ -265,7 +261,7 @@ with tab3:
         )
 
         # -------------------------------------------------
-        # TOTAL DE PARTICIPANTES
+        # PARTICIPANTES
         # -------------------------------------------------
 
         total_participantes = df["Nombre"].nunique()
@@ -278,7 +274,7 @@ with tab3:
         st.divider()
 
         # -------------------------------------------------
-        # RANKING DE HORARIOS
+        # RANKING
         # -------------------------------------------------
 
         st.subheader(
@@ -293,9 +289,7 @@ with tab3:
             )
         )
 
-        # Crear todas las combinaciones
-        # para que también aparezcan horarios
-        # con CERO personas ocupadas.
+        # Crear todos los horarios posibles
 
         all_slots = pd.MultiIndex.from_product(
             [DAYS, TIMES],
@@ -314,8 +308,7 @@ with tab3:
             .astype(int)
         )
 
-        # Ordenar de MENOS ocupados
-        # a MÁS ocupados
+        # Menos ocupados primero
 
         ranking = ranking.sort_values(
             by="Personas ocupadas",
@@ -336,7 +329,7 @@ with tab3:
         st.divider()
 
         # -------------------------------------------------
-        # PERSONAS OCUPADAS POR HORARIO
+        # QUIÉNES ESTÁN OCUPADOS
         # -------------------------------------------------
 
         st.subheader(
@@ -377,4 +370,3 @@ with tab3:
                 st.write(
                     f"❌ {person}"
                 )
-```
